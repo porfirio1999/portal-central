@@ -46,6 +46,7 @@ def actualizar_url():
         print(f"✔️ Estación {data['id_estacion']} actualizó URL a {data['url_ngrok']}")
         return {'status': 'ok'}
     return {'status': 'error', 'message': 'Estación no encontrada'}, 404
+# Despliegue forzado para crear tabla 'estacion'
 
 # === INICIO ===
 if __name__ == '__main__':
