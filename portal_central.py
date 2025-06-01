@@ -14,6 +14,10 @@ class Estacion(db.Model):
     ubicacion = db.Column(db.String(100), nullable=False)
     url_ngrok = db.Column(db.String(200), nullable=False)
 
+# === CREAR TABLAS AL INICIO (sin error si ya existen) ===
+with app.app_context():
+    db.create_all()
+
 # === RUTAS ===
 @app.route('/')
 def home():
@@ -46,10 +50,7 @@ def actualizar_url():
         print(f"✔️ Estación {data['id_estacion']} actualizó URL a {data['url_ngrok']}")
         return {'status': 'ok'}
     return {'status': 'error', 'message': 'Estación no encontrada'}, 404
-# Despliegue forzado para crear tabla 'estacion'
 
-# === INICIO ===
+# === INICIO LOCAL (solo si corres manualmente) ===
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
     app.run(host='0.0.0.0', port=5000)
