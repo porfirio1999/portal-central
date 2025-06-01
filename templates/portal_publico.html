@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Estaciones Meteorológicas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .container {
+            margin: 50px auto;
+            padding: 30px;
+            background: white;
+            max-width: 600px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background: #e0f7fa;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 6px;
+        }
+        a {
+            color: #00796b;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        h2 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>🌦️ Directorio de Estaciones</h2>
+        <ul>
+            {% for est in estaciones %}
+                <li>
+                    <strong>{{ est.nombre }}</strong><br>
+                    📍 {{ est.ubicacion }}<br>
+                    🔗 <a href="{{ est.url_ngrok }}" target="_blank">Ir a la estación</a>
+                </li>
+            {% else %}
+                <p>No hay estaciones registradas.</p>
+            {% endfor %}
+        </ul>
+        <hr>
+        <p><a href="/agregar_estacion">➕ Agregar nueva estación</a></p>
+    </div>
+</body>
+</html>
