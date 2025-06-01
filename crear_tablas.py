@@ -1,0 +1,5 @@
+from portal_central import app, db
+
+with app.app_context():
+    db.create_all()
+    print("✔️ Tablas creadas correctamente")
