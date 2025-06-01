@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: portal-central
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn portal_central:app
+    envVars:
+      - key: DATABASE_URL
+        value: postgresql://portal_central_db_user:qBDOHyt4EWZd5fTduZZlNVgZgYHpTvSx@dpg-d0tou8u3jp1c73er64rg-a.oregon-postgres.render.com/portal_central_db
