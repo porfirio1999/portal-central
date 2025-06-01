@@ -1,1 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar estación</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .form-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        input[type="text"], input[type="password"], input[type="url"] {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #00796b;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        a {
+            display: inline-block;
+            margin-top: 15px;
+            color: #00796b;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-box">
+        <h2>Agregar nueva estación</h2>
+        <form method="post">
+            <input type="password" name="clave" placeholder="Clave de autorización"><br>
+            <input type="text" name="nombre" placeholder="Nombre de la estación"><br>
+            <input type="text" name="ubicacion" placeholder="Ubicación"><br>
+            <input type="url" name="url_ngrok" placeholder="URL pública (ngrok)"><br>
+            <button type="submit">Agregar</button>
+        </form>
+        <a href="/">← Volver al listado</a>
+    </div>
+</body>
+</html>
 
