@@ -1,4 +1,8 @@
 flask
 flask_sqlalchemy
+flask_login
+flask_mail
+itsdangerous
+werkzeug
 gunicorn
 psycopg2-binary
