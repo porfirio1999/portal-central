@@ -35,7 +35,7 @@ class Usuario(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     usuario = db.Column(db.String(50), unique=True, nullable=False)
     nombre_real = db.Column(db.String(100), nullable=False)
-    contrasena_hash = db.Column(db.String(128), nullable=False)
+    contrasena_hash = db.Column(db.String(256), nullable=False)  # ← CAMBIO AQUÍ
     correo = db.Column(db.String(100), unique=True, nullable=False)
 
     def set_password(self, password):
@@ -92,7 +92,7 @@ def actualizar_url():
 def registrarse():
     error = None
     if Usuario.query.first():
-        error = "❌ Ya existe un usuario registrado."
+        error = "Ya existe un usuario registrado."
         return render_template('register.html', error=error)
     if request.method == 'POST':
         nombre_real = request.form['nombre_real']
@@ -145,7 +145,7 @@ def reset_token(token):
     try:
         correo = s.loads(token, salt='recuperar-clave', max_age=600)
     except:
-        return "❌ Token inválido o expirado"
+        return "Token inválido o expirado"
     user = Usuario.query.filter_by(correo=correo).first()
     if request.method == 'POST':
         nueva = request.form['nueva']
