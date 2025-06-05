@@ -90,8 +90,10 @@ def actualizar_url():
 
 @app.route('/registrarse', methods=['GET', 'POST'])
 def registrarse():
+    error = None
     if Usuario.query.first():
-        return "❌ Ya existe un usuario registrado."
+        error = "❌ Ya existe un usuario registrado."
+        return render_template('register.html', error=error)
     if request.method == 'POST':
         nombre_real = request.form['nombre_real']
         usuario = request.form['usuario']
@@ -102,10 +104,12 @@ def registrarse():
         db.session.add(nuevo)
         db.session.commit()
         return redirect('/login')
-    return render_template('register.html')
+    return render_template('register.html', error=error)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    error = None
+    mostrar_registro = Usuario.query.first() is None
     if request.method == 'POST':
         usuario = request.form['usuario']
         contrasena = request.form['contrasena']
@@ -113,8 +117,8 @@ def login():
         if user and user.check_password(contrasena):
             login_user(user)
             return redirect('/')
-        return "❌ Credenciales incorrectas"
-    return render_template('login.html')
+        error = "❌ Usuario o contraseña incorrectos"
+    return render_template('login.html', error=error, mostrar_registro=mostrar_registro)
 
 @app.route('/logout')
 @login_required
