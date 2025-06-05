@@ -117,7 +117,7 @@ def login():
         if user and user.check_password(contrasena):
             login_user(user)
             return redirect('/')
-        error = "❌ Usuario o contraseña incorrectos"
+        error = "Usuario o contraseña incorrectos"
     return render_template('login.html', error=error, mostrar_registro=mostrar_registro)
 
 @app.route('/logout')
@@ -156,4 +156,6 @@ def reset_token(token):
 
 # === INICIO LOCAL ===
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
+
