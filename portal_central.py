@@ -77,7 +77,6 @@ def agregar_estacion():
     return render_template("agregar_estacion.html")
 
 @app.route('/api/actualizar_url', methods=['POST'])
-@login_required
 def actualizar_url():
     data = request.get_json()
     estacion = Estacion.query.get(data['id_estacion'])
