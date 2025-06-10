@@ -228,6 +228,12 @@ def datos_comparacion():
 
     return jsonify(datos)
 
+@app.route("/comparar")
+@login_required
+def comparar():
+    return render_template("comparar_estaciones.html")
+
+
 # === INICIO LOCAL ===
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
