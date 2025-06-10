@@ -210,6 +210,24 @@ def subir_datos():
         ])
     return {"status": "ok"}
 
+@app.route("/api/datos_comparacion")
+@login_required
+def datos_comparacion():
+    archivos = glob.glob("lecturas/*.csv")
+    datos = {}
+
+    for archivo in archivos:
+        nombre = os.path.basename(archivo).replace(".csv", "")
+        try:
+            df = pd.read_csv(archivo)
+            df["timestamp"] = pd.to_datetime(df["timestamp"])
+            df = df.tail(12)
+            datos[nombre] = df.to_dict(orient="list")
+        except Exception as e:
+            print(f"Error al procesar {archivo}: {e}")
+
+    return jsonify(datos)
+
 # === INICIO LOCAL ===
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
