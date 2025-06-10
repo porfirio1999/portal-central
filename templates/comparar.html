@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Comparación en Tiempo Real</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h2 style="text-align:center;">📊 Comparación de Variables Meteorológicas</h2>
+
+    <div style="width: 90%; margin: auto;">
+        {% for variable in ["temperatura", "humedad_aire", "presion", "humedad_suelo"] %}
+            <h3>{{ variable.replace("_", " ").title() }}</h3>
+            <canvas id="grafica_{{ variable }}"></canvas>
+            <br><br>
+        {% endfor %}
+    </div>
+
+    <script>
+        const colores = ['red', 'blue', 'green', 'orange', 'purple', 'cyan', 'brown'];
+        const variables = ["temperatura", "humedad_aire", "presion", "humedad_suelo"];
+        const charts = {};
+
+        // Crear las gráficas vacías al inicio
+        variables.forEach(variable => {
+            const ctx = document.getElementById("grafica_" + variable).getContext("2d");
+            charts[variable] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: []
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'top' },
+                        title: {
+                            display: true,
+                            text: variable.replace("_", " ").toUpperCase()
+                        }
+                    }
+                }
+            });
+        });
+
+        // Función para actualizar los datos desde el backend
+        async function actualizarDatos() {
+            const res = await fetch("/api/datos_comparacion");
+            const datos = await res.json();
+
+            variables.forEach(variable => {
+                const chart = charts[variable];
+                chart.data.datasets = [];
+                let colorIndex = 0;
+
+                for (const estacion in datos) {
+                    const serie = datos[estacion][variable];
+                    const tiempos = datos[estacion]["timestamp"];
+                    chart.data.labels = tiempos;
+                    chart.data.datasets.push({
+                        label: estacion,
+                        data: serie,
+                        borderColor: colores[colorIndex % colores.length],
+                        fill: false,
+                        tension: 0.2
+                    });
+                    colorIndex++;
+                }
+
+                chart.update();
+            });
+        }
+
+        // Llamar cada 10 segundos (ajustable si lo deseas)
+        setInterval(actualizarDatos, 10000);
+        window.onload = actualizarDatos;
+    </script>
+</body>
+</html>
