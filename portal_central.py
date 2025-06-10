@@ -158,6 +158,7 @@ def reset_token(token):
 @app.route('/cambiar_intervalo', methods=['POST'])
 @login_required
 def cambiar_intervalo():
+    import requests
     intervalo = int(request.form['intervalo'])
     estaciones = Estacion.query.all()
     resultados = {}
@@ -170,11 +171,14 @@ def cambiar_intervalo():
                 resultados[estacion.nombre] = "✅ OK"
             else:
                 resultados[estacion.nombre] = f"❌ HTTP {r.status_code}"
+        except requests.exceptions.Timeout:
+            resultados[estacion.nombre] = "⏱️ Timeout: no respondió a tiempo"
+        except requests.exceptions.ConnectionError:
+            resultados[estacion.nombre] = "🔌 No se pudo conectar"
         except Exception as e:
-            resultados[estacion.nombre] = f"⚠️ Error: {e}"
+            resultados[estacion.nombre] = f"⚠️ Error inesperado: {str(e)}"
 
     return render_template("portal_publico.html", estaciones=estaciones, resultados=resultados)
-
 
 
 # === INICIO LOCAL ===
