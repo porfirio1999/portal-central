@@ -106,4 +106,60 @@
         <!-- Formulario para cambiar intervalo -->
         <form action="/cambiar_intervalo" method="post" style="margin-top: 30px;">
             <label for="intervalo"><strong>🕒 Cambiar intervalo de muestreo:</strong></label><br><br>
-            <select name="interval
+            <select name="intervalo" id="intervalo" style="padding: 6px;">
+                <option value="20">20 segundos</option>
+                <option value="60">1 minuto</option>
+                <option value="300">5 minutos</option>
+                <option value="600">10 minutos</option>
+                <option value="3600">1 hora</option>
+            </select>
+            <button id="btn-aplicar" type="submit" style="margin-left: 10px; padding: 6px 12px; position: relative;">
+                Aplicar
+                <span id="spinner" style="display: none; margin-left: 8px;">⏳</span>
+            </button>
+        </form>
+    </div>
+
+    <!-- Modal -->
+    {% if resultados %}
+    <div id="modalResultados" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>📋 Resultados de sincronización</h3>
+            <ul style="list-style-type: none; padding: 0;">
+                {% for nombre, resultado in resultados.items() %}
+                    <li style="margin-bottom: 8px;"><strong>{{ nombre }}:</strong> {{ resultado }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Scripts -->
+    <script>
+        // Activar modal si hay resultados
+        {% if resultados %}
+        window.onload = function() {
+            const modal = document.getElementById("modalResultados");
+            const span = document.querySelector(".close");
+            modal.style.display = "block";
+            span.onclick = () => modal.style.display = "none";
+            window.onclick = e => {
+                if (e.target == modal) modal.style.display = "none";
+            };
+        }
+        {% endif %}
+
+        // Activar spinner al enviar formulario
+        const form = document.querySelector("form");
+        const btn = document.getElementById("btn-aplicar");
+        const spinner = document.getElementById("spinner");
+
+        form.addEventListener("submit", () => {
+            btn.disabled = true;
+            spinner.style.display = "inline-block";
+            btn.style.opacity = 0.7;
+        });
+    </script>
+</body>
+</html>
