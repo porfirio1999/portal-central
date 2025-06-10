@@ -190,7 +190,7 @@ def subir_datos():
         return {"status": "error", "message": "Faltan datos"}, 400
 
     # Sanear ID para evitar inyecciones en el nombre del archivo
-    estacion_id = ''.join(c for c in estacion_id if c.isalnum() or c == "_")
+    estacion_id = ''.join(c for c in str(estacion_id) if c.isalnum() or c == "_")
 
     os.makedirs("lecturas", exist_ok=True)
     ruta = f"lecturas/{estacion_id}.csv"
