@@ -69,8 +69,33 @@
                 <p>No hay estaciones registradas.</p>
             {% endfor %}
         </ul>
+
         <hr>
         <p><a href="/agregar_estacion">➕ Agregar nueva estación</a></p>
+
+        <!-- Formulario para cambiar intervalo -->
+        <form action="/cambiar_intervalo" method="post" style="margin-top: 30px;">
+            <label for="intervalo"><strong>🕒 Cambiar intervalo de muestreo:</strong></label><br><br>
+            <select name="intervalo" id="intervalo" style="padding: 6px;">
+                <option value="20">20 segundos</option>
+                <option value="60">1 minuto</option>
+                <option value="300">5 minutos</option>
+                <option value="600">10 minutos</option>
+                <option value="3600">1 hora</option>
+            </select>
+            <button type="submit" style="margin-left: 10px; padding: 6px 12px;">Aplicar</button>
+        </form>
+
+        {% if resultados %}
+        <div style="margin-top: 30px; text-align: left;">
+            <h3>📋 Resultados de sincronización:</h3>
+            <ul>
+                {% for nombre, resultado in resultados.items() %}
+                    <li><strong>{{ nombre }}:</strong> {{ resultado }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
     </div>
 </body>
 </html>
