@@ -152,6 +152,28 @@ def reset_token(token):
         db.session.commit()
         return redirect('/login')
     return render_template('reset_token.html')
+    
+@app.route('/cambiar_intervalo', methods=['POST'])
+@login_required
+def cambiar_intervalo():
+    intervalo = int(request.form['intervalo'])
+    estaciones = Estacion.query.all()
+    resultados = {}
+
+    for estacion in estaciones:
+        try:
+            url_api = f"{estacion.url_ngrok}/actualizar_intervalo"
+            r = requests.post(url_api, json={"intervalo_segundos": intervalo}, timeout=5)
+            if r.status_code == 200:
+                resultados[estacion.nombre] = "✅ OK"
+            else:
+                resultados[estacion.nombre] = f"❌ HTTP {r.status_code}"
+        except Exception as e:
+            resultados[estacion.nombre] = f"⚠️ Error: {e}"
+
+    return render_template("portal_publico.html", estaciones=estaciones, resultados=resultados)
+
+
 
 # === INICIO LOCAL ===
 if __name__ == '__main__':
