@@ -6,6 +6,8 @@ from flask_mail import Mail, Message
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import URLSafeTimedSerializer
 import os
+import requests
+
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "clave_predeterminada")
