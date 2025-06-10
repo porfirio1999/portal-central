@@ -8,6 +8,9 @@ from itsdangerous import URLSafeTimedSerializer
 import os
 import requests
 import csv  # <-- AÑADIDO
+import glob
+import pandas as pd
+import os
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "clave_predeterminada")
@@ -213,20 +216,27 @@ def subir_datos():
 @app.route("/api/datos_comparacion")
 @login_required
 def datos_comparacion():
+
+
     archivos = glob.glob("lecturas/*.csv")
+    print("📂 Archivos encontrados:", archivos)
+
     datos = {}
 
     for archivo in archivos:
         nombre = os.path.basename(archivo).replace(".csv", "")
         try:
             df = pd.read_csv(archivo)
+            print(f"🟢 Archivo {archivo} leído correctamente con {len(df)} filas")
             df["timestamp"] = pd.to_datetime(df["timestamp"])
-            df = df.tail(12)
+            df = df.tail(12)  # tomar las últimas 12 muestras
             datos[nombre] = df.to_dict(orient="list")
         except Exception as e:
-            print(f"Error al procesar {archivo}: {e}")
+            print(f"⚠️ Error al procesar {archivo}: {e}")
 
+    print("📤 Datos enviados al cliente:", list(datos.keys()))
     return jsonify(datos)
+
 
 @app.route("/comparar")
 @login_required
