@@ -7,7 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import URLSafeTimedSerializer
 import os
 import requests
-
+import csv  # <-- AÑADIDO
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "clave_predeterminada")
@@ -37,7 +37,7 @@ class Usuario(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     usuario = db.Column(db.String(50), unique=True, nullable=False)
     nombre_real = db.Column(db.String(100), nullable=False)
-    contrasena_hash = db.Column(db.String(256), nullable=False)  # ← CAMBIO AQUÍ
+    contrasena_hash = db.Column(db.String(256), nullable=False)
     correo = db.Column(db.String(100), unique=True, nullable=False)
 
     def set_password(self, password):
@@ -154,11 +154,10 @@ def reset_token(token):
         db.session.commit()
         return redirect('/login')
     return render_template('reset_token.html')
-    
+
 @app.route('/cambiar_intervalo', methods=['POST'])
 @login_required
 def cambiar_intervalo():
-    import requests
     intervalo = int(request.form['intervalo'])
     estaciones = Estacion.query.all()
     resultados = {}
@@ -180,9 +179,38 @@ def cambiar_intervalo():
 
     return render_template("portal_publico.html", estaciones=estaciones, resultados=resultados)
 
+@app.route("/api/subir_datos", methods=["POST"])
+def subir_datos():
+    from datetime import datetime
+    data = request.get_json()
+    estacion_id = data.get("estacion_id")
+    lectura = data.get("lectura")
+
+    if not estacion_id or not lectura:
+        return {"status": "error", "message": "Faltan datos"}, 400
+
+    # Sanear ID para evitar inyecciones en el nombre del archivo
+    estacion_id = ''.join(c for c in estacion_id if c.isalnum() or c == "_")
+
+    os.makedirs("lecturas", exist_ok=True)
+    ruta = f"lecturas/{estacion_id}.csv"
+    existe = os.path.exists(ruta)
+
+    with open(ruta, "a", newline="") as f:
+        writer = csv.writer(f)
+        if not existe:
+            writer.writerow(["timestamp", "temperatura", "humedad_aire", "presion", "humedad_suelo", "lluvia"])
+        writer.writerow([
+            lectura["timestamp"],
+            lectura["temperatura"],
+            lectura["humedad_aire"],
+            lectura["presion"],
+            lectura["humedad_suelo"],
+            lectura["lluvia"]
+        ])
+    return {"status": "ok"}
 
 # === INICIO LOCAL ===
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
-
