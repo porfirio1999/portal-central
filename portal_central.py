@@ -180,7 +180,7 @@ def cambiar_intervalo():
         except Exception as e:
             resultados[estacion.nombre] = f"⚠️ Error inesperado: {str(e)}"
 
-    return render_template("portal_publico.html", estaciones=estaciones, resultados=resultados)
+    return redirect(url_for('home')) 
 
 @app.route("/api/subir_datos", methods=["POST"])
 def subir_datos():
