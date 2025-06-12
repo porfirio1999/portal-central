@@ -9,14 +9,27 @@
     <h2 style="text-align:center;">📊 Comparación de variables meteorológicas</h2>
 
     <div style="width: 90%; margin: auto;">
+        {% set nombres_legibles = {
+            "temperatura": "Temperatura",
+            "humedad_aire": "Humedad del aire",
+            "presion": "Presión",
+            "humedad_suelo": "Humedad del suelo"
+        } %}
         {% for variable in ["temperatura", "humedad_aire", "presion", "humedad_suelo"] %}
-            <h3>{{ variable.replace("_", " ").title() }}</h3>
+            <h3>{{ nombres_legibles[variable] }}</h3>
             <canvas id="grafica_{{ variable }}"></canvas>
             <br><br>
         {% endfor %}
     </div>
 
     <script>
+        const nombresLegibles = {
+            "temperatura": "Temperatura",
+            "humedad_aire": "Humedad del aire",
+            "presion": "Presión",
+            "humedad_suelo": "Humedad del suelo"
+        };
+
         const colores = ['red', 'blue', 'green', 'orange', 'purple', 'cyan', 'brown'];
         const variables = ["temperatura", "humedad_aire", "presion", "humedad_suelo"];
         const charts = {};
@@ -36,7 +49,7 @@
                         legend: { position: 'top' },
                         title: {
                             display: true,
-                            text: variable.replace("_", " ").toUpperCase()
+                            text: nombresLegibles[variable]
                         }
                     }
                 }
