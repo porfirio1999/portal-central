@@ -1,5 +1,5 @@
 # portal_central.py actualizado con login, registro unico y recuperacion
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user, UserMixin
 from flask_mail import Mail, Message
@@ -62,7 +62,9 @@ with app.app_context():
 @login_required
 def home():
     estaciones = Estacion.query.all()
-    return render_template('portal_publico.html', estaciones=estaciones)
+    resultados = session.pop('resultados_intervalo', None)  # ← extrae resultados si hay
+    return render_template('portal_publico.html', estaciones=estaciones, resultados=resultados)
+
 
 @app.route('/agregar_estacion', methods=['GET', 'POST'])
 @login_required
@@ -180,7 +182,9 @@ def cambiar_intervalo():
         except Exception as e:
             resultados[estacion.nombre] = f"⚠️ Error inesperado: {str(e)}"
 
-    return redirect(url_for('home')) 
+    session['resultados_intervalo'] = resultados  # ← guarda temporalmente
+    return redirect(url_for('home'))
+
 
 @app.route("/api/subir_datos", methods=["POST"])
 def subir_datos():
