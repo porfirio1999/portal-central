@@ -93,7 +93,7 @@
                 <li>
                     <strong>{{ est.nombre }}</strong><br>
                     📍 {{ est.ubicacion }}<br>
-                    🔗 <a href="{{ est.url_ngrok }}" target="_blank">Ir a la estación</a>
+                    🔗 <a id="url-{{ est.id }}" href="{{ est.url_ngrok }}" target="_blank">Ir a la estación</a>
                 </li>
             {% else %}
                 <p>No hay estaciones registradas.</p>
@@ -170,10 +170,24 @@
             btn.style.opacity = 0.7;
         });
 
-        // Auto-recargar la página cada 10 segundos
-        setInterval(() => {
-            location.reload();
-        }, 10000);
+    </script>
+    <script>
+    function actualizarURLs() {
+        fetch("/api/urls_estaciones")
+            .then(response => response.json())
+            .then(data => {
+                for (const id in data) {
+                    const enlace = document.getElementById("url-" + id);
+                    if (enlace) {
+                        enlace.href = data[id];
+                    }
+                }
+            })
+            .catch(error => console.error("Error actualizando URLs:", error));
+    }
+
+    // Actualizar cada 10 segundos
+    setInterval(actualizarURLs, 10000);
     </script>
 
 </body>
