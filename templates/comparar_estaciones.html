@@ -21,7 +21,7 @@
             "humedad_suelo": "Humedad del suelo"
         } %}
         {% for variable in ["temperatura", "humedad_aire", "presion", "humedad_suelo"] %}
-            <h3>{{ nombres_legibles[variable] }}</h3>
+            
             <canvas id="grafica_{{ variable }}"></canvas>
             <br><br>
         {% endfor %}
