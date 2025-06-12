@@ -104,7 +104,6 @@
         <p><a href="/agregar_estacion">➕ Agregar nueva estación</a></p>
         <p><a href="/comparar">📊 Comparar estaciones en tiempo real</a></p>
 
-
         <!-- Formulario para cambiar intervalo -->
         <form action="/cambiar_intervalo" method="post" style="margin-top: 30px;">
             <label for="intervalo"><strong>🕒 Cambiar intervalo de muestreo:</strong></label><br><br>
@@ -133,6 +132,9 @@
                     <li style="margin-bottom: 8px;"><strong>{{ nombre }}:</strong> {{ resultado }}</li>
                 {% endfor %}
             </ul>
+            <div style="text-align: center; margin-top: 20px;">
+                <button id="btn-aceptar" style="padding: 6px 14px;">Aceptar</button>
+            </div>
         </div>
     </div>
     {% endif %}
@@ -144,8 +146,13 @@
         window.onload = function() {
             const modal = document.getElementById("modalResultados");
             const span = document.querySelector(".close");
+            const aceptarBtn = document.getElementById("btn-aceptar");
+
             modal.style.display = "block";
+
             span.onclick = () => modal.style.display = "none";
+            aceptarBtn.onclick = () => modal.style.display = "none";
+
             window.onclick = e => {
                 if (e.target == modal) modal.style.display = "none";
             };
@@ -162,12 +169,11 @@
             spinner.style.display = "inline-block";
             btn.style.opacity = 0.7;
         });
-    </script>
-    <script>
-        // Auto-recargar la página cada 30 segundos
+
+        // Auto-recargar la página cada 10 segundos
         setInterval(() => {
             location.reload();
-        }, 10000); // 30000 milisegundos = 30 segundos
+        }, 10000);
     </script>
 
 </body>
