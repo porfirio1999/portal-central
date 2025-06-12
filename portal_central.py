@@ -244,6 +244,11 @@ def datos_comparacion():
     print("📤 Datos enviados al cliente:", list(datos.keys()))
     return jsonify(datos)
 
+@app.route("/api/urls_estaciones")
+@login_required
+def urls_estaciones():
+    estaciones = Estacion.query.all()
+    return jsonify({e.id: e.url_ngrok for e in estaciones})
 
 
 @app.route("/comparar")
